@@ -1,7 +1,7 @@
 {
- "version": "1.3.2",
- "fichier": "rtm-cast-1.3.2.zip",
- "sha256": "c75979da9b67cf431bbb90bf9600832eaf639de621efb5d7633b148c9ca22e7d",
- "signature": "SSBwzLnfizf+fEBbHK6Qw/LjbcRL79zuHwuJIsTa/0nry9bMYHZhqFQB0S4fPGH9S+tQ74vtFeuIW9oGBSC+DQ==",
- "date": "2026-11-20T15:30:32.465Z"
+ "version": "1.4.0",
+ "fichier": "rtm-cast-1.4.0.zip",
+ "sha256": "ee1ee2b954486cb5551c632eed576c6938009a466cba0b70a197082ef5aaa352",
+ "signature": "CKNd36H6dBx9heqLtDpwTPg07qFnLpL1K4DEiPcvOaraCmkuhHDE75Tqk8cqfhMLa/YSnuvzRRI9d1IrxImcDg==",
+ "date": "2026-11-20T16:19:52.852Z"
 }
