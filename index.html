@@ -102,6 +102,8 @@
   </section>
   <p class="credits">Application développée par l'ingénieur <b>Baruck Tchansa Paul</b><br>sous la supervision de l'ingénieur <b>Dalyos Kaputa</b>.</p>
 </main>
+<script src="vendor/nacl-fast.min.js"></script>
+<script src="annonce-lien.js"></script>
 <script>
 (function () {
   'use strict';
@@ -113,7 +115,11 @@
   var safari = ios && /Safari/i.test(ua) && !/CriOS|FxiOS|EdgiOS|OPiOS|GSA\//i.test(ua) && !appliInterne;
   var $ = function (id) { return document.getElementById(id); };
 
-  if (android) {
+  // Dans l'appli RTM (Android) ou depuis l'icône : pas de redirection vers Chrome.
+  var dansAppli = !!window.RTMAndroid || /[?&]app=1/.test(location.search);
+  if (dansAppli) {
+    // rien : on cherche le direct et on l'ouvre ici
+  } else if (android) {
     if (appliInterne) {
       // Ouvre la même page dans Chrome (lien « intent » d'Android).
       var intent = 'intent://' + ici.replace(/^https?:\/\//, '') + '#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=' + encodeURIComponent(ici) + ';end';
@@ -139,23 +145,58 @@
   // Seules les adresses Cloudflare ou le domaine officiel sont acceptées.
   var DOMAINES = [];
   var autorisee = function (a) {
-    var m = /^https:\/\/([a-z0-9.-]+)(:\d+)?\/?$/i.exec(a || '');
-    if (!m) return false;
-    var h = m[1].toLowerCase();
-    return /^[a-z0-9-]+\.trycloudflare\.com$/.test(h) || DOMAINES.indexOf(h) >= 0;
+    return window.RTMAnnonce ? window.RTMAnnonce.autorisee(a, DOMAINES) && window.RTMAnnonce.hoteDe(a) !== ECHEC.toLowerCase() : false;
   };
   // Ouvert depuis l'icône RTM de l'écran d'accueil : on va directement au direct.
   var depuisIcone = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true || /[?&]app=1/.test(location.search);
   if (depuisIcone) {
     for (var k = 0, z = ['android', 'android-appli', 'ios', 'ios-autre', 'ordinateur']; k < z.length; k++) $(z[k]).hidden = true;
   }
+  // 1) Annonce SIGNÉE par le PC de diffusion (canal public, sans compte) : seule une annonce
+  //    signée par la clé épinglée de la station RTM est acceptée.
+  // 2) Sinon : adresse.json (publiée par le technicien).
+  var CANAL = 'https://ntfy.sh/rtm-moba-direct-k7q2x9/json?poll=1&since=3h';
+  var CLE_STATION = ''; // clé publique de la station RTM (épinglée par le technicien)
+  function b64(s) { var b = atob(s), u = new Uint8Array(b.length); for (var i = 0; i < b.length; i++) u[i] = b.charCodeAt(i); return u; }
+  // Adresse qui vient d'échouer (l'appli Android la signale) : à ignorer cette fois.
+  var ECHEC = (/[?&]echec=([a-z0-9.-]+)/i.exec(location.search) || [])[1] || '';
+  // Le serveur répond-il vraiment ? (une vieille adresse Cloudflare morte est écartée)
+  function vivant(a) {
+    var ctl = window.AbortController ? new AbortController() : null;
+    var minuteur = setTimeout(function () { if (ctl) ctl.abort(); }, 8000);
+    return fetch(a.replace(/\/$/, '') + '/api/version?t=' + Date.now(), { cache: 'no-store', signal: ctl ? ctl.signal : undefined })
+      .then(function (r) { clearTimeout(minuteur); return r.ok; })
+      .catch(function () { clearTimeout(minuteur); return false; });
+  }
+  function annonceSignee() {
+    if (!CLE_STATION || !window.nacl || !window.TextEncoder || !window.RTMAnnonce) return Promise.resolve('');
+    return fetch(CANAL + '&t=' + Date.now(), { cache: 'no-store' })
+      .then(function (r) { return r.ok ? r.text() : ''; })
+      .then(function (txt) {
+        var verifier = function (m) {
+          return window.nacl.sign.detached.verify(new TextEncoder().encode('RTM|' + m.a + '|' + m.t), b64(m.s), b64(CLE_STATION));
+        };
+        var candidates = window.RTMAnnonce.choisir(txt, CLE_STATION, verifier, Date.now() / 1000, ECHEC, DOMAINES).slice(0, 3);
+        // la plus récente qui répond
+        return candidates.reduce(function (p, a) {
+          return p.then(function (trouvee) { return trouvee || vivant(a).then(function (ok) { return ok ? a : ''; }); });
+        }, Promise.resolve(''));
+      })
+      .catch(function () { return ''; });
+  }
+  function adresseFichier() {
+    return fetch('/rtm-adresse/adresse.json?t=' + Date.now(), { cache: 'no-store' })
+      .then(function (r) { return r.ok ? r.json() : {}; })
+      .then(function (d) { return d && typeof d.adresse === 'string' ? d.adresse : ''; })
+      .catch(function () { return ''; });
+  }
   function chercher() {
     $('etat').textContent = 'Recherche de RTM…';
     $('reessayer').hidden = true;
-    fetch('/rtm-adresse/adresse.json?t=' + Date.now(), { cache: 'no-store' })
-      .then(function (r) { return r.ok ? r.json() : {}; })
-      .then(function (d) {
-        var a = d && typeof d.adresse === 'string' && autorisee(d.adresse) ? d.adresse : '';
+    annonceSignee()
+      .then(function (a) { return a || adresseFichier(); })
+      .then(function (brut) {
+        var a = autorisee(brut) ? brut : '';
         if (!a) {
           $('etat').textContent = 'Le direct de RTM n’est pas encore en ligne. Cette page s’ouvrira toute seule dès le début de la diffusion : vous pourrez alors créer votre compte.';
           $('reessayer').hidden = false;
