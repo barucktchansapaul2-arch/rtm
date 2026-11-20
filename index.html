@@ -13,6 +13,10 @@
 <meta property="og:type" content="website">
 <link rel="icon" href="icone-192.png">
 <link rel="apple-touch-icon" href="icone-192.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="RTM">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <style>
   :root { --nuit: #071633; --bleu: #0d2352; --bord: #2b4a8f; --jaune: #f5bb32; --doux: #b9c6e4; --sombre: #0a1430; color-scheme: dark; }
   * { box-sizing: border-box; }
@@ -75,10 +79,10 @@
   <section class="carte" id="ios" hidden>
     <h2>🍏 Installer RTM sur iPhone</h2>
     <ol>
-      <li>Touchez <b>« Ouvrir RTM Direct »</b> ci-dessous.</li>
-      <li>Dans RTM, touchez le bouton <b>Partager</b> <span class="icone"><svg viewBox="0 0 24 24"><path d="M12 15V3M7.5 7.5 12 3l4.5 4.5M5 12v8h14v-8"/></svg></span> en bas de Safari.</li>
-      <li>Choisissez <b>« Sur l'écran d'accueil »</b>, puis <b>Ajouter</b>.</li>
-      <li>L'icône <b>RTM</b> apparaît : ouvrez-la, créez votre compte gratuit.</li>
+      <li>Touchez le bouton <b>Partager</b> <span class="icone"><svg viewBox="0 0 24 24"><path d="M12 15V3M7.5 7.5 12 3l4.5 4.5M5 12v8h14v-8"/></svg></span> en bas de Safari (sur cette page).</li>
+      <li>Faites défiler et choisissez <b>« Sur l'écran d'accueil »</b>.</li>
+      <li>Touchez <b>Ajouter</b> en haut à droite.</li>
+      <li>Ouvrez l'icône <b>RTM</b> sur votre écran : elle vous connecte au direct, créez votre compte gratuit.</li>
     </ol>
   </section>
 
@@ -88,8 +92,9 @@
     <p class="etat" style="text-align:left">Regardez RTM directement dans votre navigateur. Pour le téléphone, ouvrez ce même lien sur votre Android ou votre iPhone.</p>
   </section>
 
-  <a class="btn second" id="regarder" href="#" hidden>▶ Ouvrir RTM Direct</a>
+  <a class="btn second" id="regarder" href="#" hidden>▶ Regarder RTM maintenant</a>
   <p class="etat" id="etat">Recherche de RTM…</p>
+  <button class="btn second" id="reessayer" hidden>Réessayer</button>
 
   <section class="carte sponsor">
     <small>Application sponsorisée par</small>
@@ -146,17 +151,36 @@
     var h = m[1].toLowerCase();
     return /^[a-z0-9-]+\.trycloudflare\.com$/.test(h) || DOMAINES.indexOf(h) >= 0;
   };
-  fetch('/rtm-adresse/adresse.json?t=' + Date.now(), { cache: 'no-store' })
-    .then(function (r) { return r.ok ? r.json() : {}; })
-    .then(function (d) {
-      var a = d && typeof d.adresse === 'string' && autorisee(d.adresse) ? d.adresse : '';
-      if (!a) { $('etat').textContent = 'RTM n\'est pas en ligne pour le moment. Installez l\'appli : elle se connectera dès le retour du direct.'; return; }
-      $('regarder').href = a;
-      $('regarder').hidden = false;
-      $('etat').textContent = '';
-      if (ios && safari) { $('regarder').className = 'btn'; }
-    })
-    .catch(function () { $('etat').textContent = 'Vérifiez votre connexion internet, puis rechargez la page.'; });
+  // Ouvert depuis l'icône RTM de l'écran d'accueil : on va directement au direct.
+  var depuisIcone = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true || /[?&]app=1/.test(location.search);
+  if (depuisIcone) {
+    for (var k = 0, z = ['android', 'android-appli', 'ios', 'ios-autre', 'ordinateur']; k < z.length; k++) $(z[k]).hidden = true;
+  }
+  function chercher() {
+    $('etat').textContent = 'Recherche de RTM…';
+    $('reessayer').hidden = true;
+    fetch('/rtm-adresse/adresse.json?t=' + Date.now(), { cache: 'no-store' })
+      .then(function (r) { return r.ok ? r.json() : {}; })
+      .then(function (d) {
+        var a = d && typeof d.adresse === 'string' && autorisee(d.adresse) ? d.adresse : '';
+        if (!a) {
+          $('etat').textContent = 'RTM n\'est pas à l\'antenne sur internet pour le moment. Gardez l\'appli : elle se connectera dès le retour du direct.';
+          $('reessayer').hidden = false;
+          setTimeout(chercher, 30000);
+          return;
+        }
+        if (depuisIcone) { location.replace(a); return; }
+        $('regarder').href = a;
+        $('regarder').hidden = false;
+        $('etat').textContent = '';
+      })
+      .catch(function () {
+        $('etat').textContent = 'Pas de connexion internet. Vérifiez vos données mobiles ou le Wi-Fi.';
+        $('reessayer').hidden = false;
+      });
+  }
+  $('reessayer').addEventListener('click', chercher);
+  chercher();
 })();
 </script>
 </body>
