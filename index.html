@@ -122,13 +122,6 @@
       setTimeout(function () { location.href = intent; }, 600);
     } else {
       $('android').hidden = false;
-      // Demande directement l'installation (une seule fois par visite).
-      try {
-        if (!sessionStorage.getItem('rtm.apk')) {
-          sessionStorage.setItem('rtm.apk', '1');
-          setTimeout(function () { $('btn-apk').click(); }, 1200);
-        }
-      } catch (e) { /* navigation privée */ }
     }
   } else if (ios) {
     if (safari) $('ios').hidden = false; else $('ios-autre').hidden = false;
@@ -164,12 +157,18 @@
       .then(function (d) {
         var a = d && typeof d.adresse === 'string' && autorisee(d.adresse) ? d.adresse : '';
         if (!a) {
-          $('etat').textContent = 'RTM n\'est pas à l\'antenne sur internet pour le moment. Gardez l\'appli : elle se connectera dès le retour du direct.';
+          $('etat').textContent = 'Le direct de RTM n’est pas encore en ligne. Cette page s’ouvrira toute seule dès le début de la diffusion : vous pourrez alors créer votre compte.';
           $('reessayer').hidden = false;
-          setTimeout(chercher, 30000);
+          setTimeout(chercher, 15000);
           return;
         }
-        if (depuisIcone) { location.replace(a); return; }
+        // Le direct est en ligne : on entre tout de suite dans RTM (création du compte, puis le direct).
+        // Ajouter ?installer=1 au lien pour rester sur cette page (installer l'appli Android).
+        if (depuisIcone || !/[?&]installer=1/.test(location.search)) {
+          $('etat').textContent = 'Ouverture de RTM…';
+          location.replace(a);
+          return;
+        }
         $('regarder').href = a;
         $('regarder').hidden = false;
         $('etat').textContent = '';
