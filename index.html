@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#071633">
+<title>RTM Direct — Installer l'appli</title>
+<meta name="description" content="RTM — Radio Télévision Moba en direct sur votre téléphone. Installez l'appli RTM Direct (Android et iPhone).">
+<meta property="og:title" content="📺 RTM Direct — Radio Télévision Moba en direct">
+<meta property="og:description" content="Regardez RTM en direct sur votre téléphone, où que vous soyez. Touchez pour installer l'appli.">
+<meta property="og:image" content="https://barucktchansapaul2-arch.github.io/rtm/icone-512.png">
+<meta property="og:url" content="https://barucktchansapaul2-arch.github.io/rtm/">
+<meta property="og:type" content="website">
+<link rel="icon" href="icone-192.png">
+<link rel="apple-touch-icon" href="icone-192.png">
+<style>
+  :root { --nuit: #071633; --bleu: #0d2352; --bord: #2b4a8f; --jaune: #f5bb32; --doux: #b9c6e4; --sombre: #0a1430; color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body { margin: 0; min-height: 100vh; background: radial-gradient(120% 70% at 50% 0%, #17336f, var(--nuit) 70%); color: #fff;
+    font-family: Inter, "Segoe UI", Roboto, system-ui, -apple-system, sans-serif; -webkit-font-smoothing: antialiased; }
+  main { max-width: 480px; margin: 0 auto; padding: max(24px, env(safe-area-inset-top)) 20px 32px; text-align: center; }
+  .anneau { width: 132px; height: 132px; margin: 6px auto 14px; border-radius: 50%; border: 4px solid var(--jaune); background: var(--sombre); display: grid; place-items: center; overflow: hidden; }
+  .anneau img { width: 100%; height: 100%; }
+  h1 { margin: 0; font-size: 2rem; } .sous { color: var(--doux); margin: 6px 0 22px; }
+  .carte { background: rgba(13,35,82,.75); border: 1px solid var(--bord); border-radius: 18px; padding: 18px; margin: 14px 0; text-align: left; }
+  .carte h2 { margin: 0 0 10px; font-size: 1.15rem; }
+  .btn { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; min-height: 56px; border: 0; border-radius: 14px; background: var(--jaune);
+    color: var(--sombre); font-weight: 800; font-size: 1.1rem; text-decoration: none; margin: 10px 0 0; cursor: pointer; padding: 0 14px; }
+  .btn.second { background: transparent; color: #fff; border: 1.5px solid var(--bord); font-weight: 700; }
+  ol { margin: 6px 0 0; padding-left: 22px; color: var(--doux); line-height: 1.55; } ol b { color: #fff; }
+  .icone { display: inline-grid; place-items: center; width: 22px; height: 22px; vertical-align: -5px; }
+  .icone svg { width: 20px; height: 20px; fill: none; stroke: #4aa3ff; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+  .alerte { background: rgba(245,187,50,.14); border-color: var(--jaune); }
+  .etat { color: var(--doux); font-size: .92rem; margin-top: 8px; text-align: center; }
+  .sponsor { text-align: center; border-color: var(--jaune); }
+  .sponsor small { color: var(--jaune); font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+  .sponsor p { margin: 8px 0 0; }
+  .credits { color: var(--doux); font-size: .84rem; line-height: 1.5; margin-top: 18px; }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<main>
+  <div class="anneau"><img src="icone-512.png" alt="RTM"></div>
+  <h1>RTM Direct</h1>
+  <p class="sous">Radio Télévision Moba · Tanganyika, RDC<br>En direct sur votre téléphone, où que vous soyez.</p>
+
+  <!-- ANDROID dans WhatsApp / Facebook : passer dans Chrome -->
+  <section class="carte alerte" id="android-appli" hidden>
+    <h2>Ouvrez ce lien dans Chrome</h2>
+    <p class="etat">Ce lien s'est ouvert dans WhatsApp ou Facebook. Touchez le bouton pour continuer dans Chrome.</p>
+    <a class="btn" id="vers-chrome" href="#">Continuer dans Chrome</a>
+  </section>
+
+  <!-- ANDROID dans Chrome : installer l'appli -->
+  <section class="carte" id="android" hidden>
+    <h2>📱 Installer RTM sur Android</h2>
+    <a class="btn" id="btn-apk" href="RTM-Direct.apk" download="RTM-Direct.apk">⬇ Installer l'appli RTM</a>
+    <ol>
+      <li>Le téléchargement de <b>RTM-Direct.apk</b> démarre : touchez <b>Télécharger</b> puis <b>Ouvrir</b>.</li>
+      <li>Si Android demande, autorisez <b>« Installer des applis inconnues »</b> pour Chrome.</li>
+      <li>Touchez <b>Installer</b>, puis <b>Ouvrir</b>. L'icône <b>RTM</b> apparaît sur votre téléphone.</li>
+      <li>Créez votre compte gratuit et regardez le direct.</li>
+    </ol>
+  </section>
+
+  <!-- IPHONE hors de Safari -->
+  <section class="carte alerte" id="ios-autre" hidden>
+    <h2>Ouvrez ce lien dans Safari</h2>
+    <p class="etat">Sur iPhone, l'appli RTM s'installe avec Safari. Copiez le lien, ouvrez Safari et collez-le.</p>
+    <button class="btn" id="copier">Copier le lien</button>
+  </section>
+
+  <!-- IPHONE dans Safari -->
+  <section class="carte" id="ios" hidden>
+    <h2>🍏 Installer RTM sur iPhone</h2>
+    <ol>
+      <li>Touchez <b>« Ouvrir RTM Direct »</b> ci-dessous.</li>
+      <li>Dans RTM, touchez le bouton <b>Partager</b> <span class="icone"><svg viewBox="0 0 24 24"><path d="M12 15V3M7.5 7.5 12 3l4.5 4.5M5 12v8h14v-8"/></svg></span> en bas de Safari.</li>
+      <li>Choisissez <b>« Sur l'écran d'accueil »</b>, puis <b>Ajouter</b>.</li>
+      <li>L'icône <b>RTM</b> apparaît : ouvrez-la, créez votre compte gratuit.</li>
+    </ol>
+  </section>
+
+  <!-- ORDINATEUR -->
+  <section class="carte" id="ordinateur" hidden>
+    <h2>💻 Sur ordinateur</h2>
+    <p class="etat" style="text-align:left">Regardez RTM directement dans votre navigateur. Pour le téléphone, ouvrez ce même lien sur votre Android ou votre iPhone.</p>
+  </section>
+
+  <a class="btn second" id="regarder" href="#" hidden>▶ Ouvrir RTM Direct</a>
+  <p class="etat" id="etat">Recherche de RTM…</p>
+
+  <section class="carte sponsor">
+    <small>Application sponsorisée par</small>
+    <p>l'Honorable <b>Christian Mwando Simba</b><br>et la Sénatrice <b>Mwando Katempa Christine</b></p>
+  </section>
+  <p class="credits">Application développée par l'ingénieur <b>Baruck Tchansa Paul</b><br>sous la supervision de l'ingénieur <b>Dalios Kaputa</b>.</p>
+</main>
+<script>
+(function () {
+  'use strict';
+  var ua = navigator.userAgent;
+  var ici = location.href.split('#')[0].split('?')[0];
+  var android = /Android/i.test(ua);
+  var ios = /iPhone|iPad|iPod/i.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  var appliInterne = /FBAN|FBAV|FB_IAB|Instagram|WhatsApp|Line\/|Snapchat|TikTok|musical_ly|; wv\)/i.test(ua);
+  var safari = ios && /Safari/i.test(ua) && !/CriOS|FxiOS|EdgiOS|OPiOS|GSA\//i.test(ua) && !appliInterne;
+  var $ = function (id) { return document.getElementById(id); };
+
+  if (android) {
+    if (appliInterne) {
+      // Ouvre la même page dans Chrome (lien « intent » d'Android).
+      var intent = 'intent://' + ici.replace(/^https?:\/\//, '') + '#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=' + encodeURIComponent(ici) + ';end';
+      $('vers-chrome').href = intent;
+      $('android-appli').hidden = false;
+      setTimeout(function () { location.href = intent; }, 600);
+    } else {
+      $('android').hidden = false;
+      // Demande directement l'installation (une seule fois par visite).
+      try {
+        if (!sessionStorage.getItem('rtm.apk')) {
+          sessionStorage.setItem('rtm.apk', '1');
+          setTimeout(function () { $('btn-apk').click(); }, 1200);
+        }
+      } catch (e) { /* navigation privée */ }
+    }
+  } else if (ios) {
+    if (safari) $('ios').hidden = false; else $('ios-autre').hidden = false;
+  } else {
+    $('ordinateur').hidden = false;
+  }
+
+  $('copier').addEventListener('click', function () {
+    var ok = function () { $('copier').textContent = 'Lien copié ✓ — collez-le dans Safari'; };
+    if (navigator.clipboard) navigator.clipboard.writeText(ici).then(ok, function () { prompt('Copiez ce lien :', ici); });
+    else prompt('Copiez ce lien :', ici);
+  });
+
+  // Adresse actuelle du direct, publiée automatiquement par la régie de RTM (dépôt séparé).
+  // Seules les adresses Cloudflare ou le domaine officiel sont acceptées.
+  var DOMAINES = [];
+  var autorisee = function (a) {
+    var m = /^https:\/\/([a-z0-9.-]+)(:\d+)?\/?$/i.exec(a || '');
+    if (!m) return false;
+    var h = m[1].toLowerCase();
+    return /^[a-z0-9-]+\.trycloudflare\.com$/.test(h) || DOMAINES.indexOf(h) >= 0;
+  };
+  fetch('/rtm-adresse/adresse.json?t=' + Date.now(), { cache: 'no-store' })
+    .then(function (r) { return r.ok ? r.json() : {}; })
+    .then(function (d) {
+      var a = d && typeof d.adresse === 'string' && autorisee(d.adresse) ? d.adresse : '';
+      if (!a) { $('etat').textContent = 'RTM n\'est pas en ligne pour le moment. Installez l\'appli : elle se connectera dès le retour du direct.'; return; }
+      $('regarder').href = a;
+      $('regarder').hidden = false;
+      $('etat').textContent = '';
+      if (ios && safari) { $('regarder').className = 'btn'; }
+    })
+    .catch(function () { $('etat').textContent = 'Vérifiez votre connexion internet, puis rechargez la page.'; });
+})();
+</script>
+</body>
+</html>
