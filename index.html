@@ -156,7 +156,7 @@
   //    signée par la clé épinglée de la station RTM est acceptée.
   // 2) Sinon : adresse.json (publiée par le technicien).
   var CANAL = 'https://ntfy.sh/rtm-moba-direct-k7q2x9/json?poll=1&since=3h';
-  var CLE_STATION = ''; // clé publique de la station RTM (épinglée par le technicien)
+  var CLE_STATION = 'agH3ZNHQNQ2XY2tYFCdZQzDzZ+D38zqlFlSeuXkhK6c='; // clé publique de la station RTM (épinglée par le technicien)
   function b64(s) { var b = atob(s), u = new Uint8Array(b.length); for (var i = 0; i < b.length; i++) u[i] = b.charCodeAt(i); return u; }
   // Adresse qui vient d'échouer (l'appli Android la signale) : à ignorer cette fois.
   var ECHEC = (/[?&]echec=([a-z0-9.-]+)/i.exec(location.search) || [])[1] || '';
