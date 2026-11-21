@@ -170,7 +170,8 @@
   }
   function annonceSignee() {
     if (!CLE_STATION || !window.nacl || !window.TextEncoder || !window.RTMAnnonce) return Promise.resolve('');
-    return fetch(CANAL + '&t=' + Date.now(), { cache: 'no-store' })
+    // PAS de paramètre « &t= » anti-cache : pour ntfy, « t » filtre le TITRE des messages (réponse vide).
+    return fetch(CANAL, { cache: 'no-store' })
       .then(function (r) { return r.ok ? r.text() : ''; })
       .then(function (txt) {
         var verifier = function (m) {
