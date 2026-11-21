@@ -176,7 +176,7 @@
         var verifier = function (m) {
           return window.nacl.sign.detached.verify(new TextEncoder().encode('RTM|' + m.a + '|' + m.t), b64(m.s), b64(CLE_STATION));
         };
-        var candidates = window.RTMAnnonce.choisir(txt, CLE_STATION, verifier, Date.now() / 1000, ECHEC, DOMAINES).slice(0, 3);
+        var candidates = window.RTMAnnonce.choisir(txt, CLE_STATION, verifier, Date.now() / 1000, ECHEC, DOMAINES).slice(0, 6);
         // la plus récente qui répond
         return candidates.reduce(function (p, a) {
           return p.then(function (trouvee) { return trouvee || vivant(a).then(function (ok) { return ok ? a : ''; }); });
