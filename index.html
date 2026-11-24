@@ -195,7 +195,8 @@
     $('etat').textContent = 'Recherche de RTM…';
     $('reessayer').hidden = true;
     annonceSignee()
-      .then(function (a) { return a || adresseFichier(); })
+      // Adresse de secours : utilisée seulement si elle répond vraiment (sinon page d'erreur Cloudflare).
+      .then(function (a) { return a || adresseFichier().then(function (f) { return f && autorisee(f) ? vivant(f).then(function (ok) { return ok ? f : ''; }) : ''; }); })
       .then(function (brut) {
         var a = autorisee(brut) ? brut : '';
         if (!a) {
